@@ -22,11 +22,19 @@ async function main() {
 
 async function changeNextScene() {
   const currentScene = await obs.currentScene();
-  const idx = scenes.indexOf(currentScene.name);
-  const newIdx = idx < scenes.length - 1 ? idx + 1 : 0;
-  const newScene = scenes[newIdx];
-  console.log('Changing to scene', newScene);
-  await obs.changeScene(newScene);
+  let idx = scenes.indexOf(currentScene.name);
+  while (true) {
+    const newIdx = idx < scenes.length - 1 ? idx + 1 : 0;
+    const newScene = scenes[newIdx];
+    console.log('Changing to scene', newScene);
+    try {
+      await obs.changeScene(newScene);
+      break;
+    } catch (err) {
+      console.error('Error changing to scene', newScene, '. Error was:', err);
+      idx = idx + 1;
+    }
+  }
 }
 
 main();
