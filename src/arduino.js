@@ -27,7 +27,7 @@ class Arduino {
         if (err) {
           return reject(`Error trying to auto detect Arduino: ${err}`);
         }
-        const port = ports.find(p => p.manufacturer && p.manufacturer.includes('arduino'));
+        const port = ports.find(p => p.manufacturer && p.manufacturer.toLowerCase().includes('arduino'));
         return resolve(port && port.comName);
       });
     });
