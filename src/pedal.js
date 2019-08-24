@@ -11,6 +11,7 @@ class Pedal {
   handleMessage(msg) {
     const cmdStr = msg && msg.trim();
     const cmd = _.get(this.commandMap, cmdStr);
+    console.log('Executing', cmdStr);
     if (cmd) {
       cmd(msg);
     } else {
