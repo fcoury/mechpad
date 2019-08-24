@@ -14,15 +14,17 @@ class Obs {
     if (!this.initialized) {
       await this.obs.connect();
       this.initialized = true;
-    } 
+    }
   }
 
   async currentScene() {
-    return await this.send('GetCurrentScene');
+    return await this.send('GetCurrentScene')
+      .catch(err => console.error('Error getting current scene', err));
   }
 
   async changeScene(sceneName) {
-    return await this.send('SetCurrentScene', { 'scene-name': sceneName });
+    return await this.send('SetCurrentScene', { 'scene-name': sceneName })
+      .catch(err => console.error('Error changing to', sceneName, err));
   }
 }
 

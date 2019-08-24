@@ -2,12 +2,8 @@ const Readline = require('@serialport/parser-readline');
 const SerialPort = require('serialport');
 
 class Arduino {
-  constructor(port) {
-    this.port = port;
-  }
-
-  async init() {
-    this.port = this.port || await this.detect();
+  async init(port) {
+    this.port = port || await this.detect();
     if (!this.port) {
       throw new Error('Could not auto detect your Arduino, please specify the port on the config.json file');
     }
