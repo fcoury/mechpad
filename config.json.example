@@ -1,7 +1,15 @@
 {
-  "scenes": [
-    "Screensharing", 
-    "Face New", 
-    "Side New"
-  ]
+  "actions": {
+    "Click": "nextScene",
+    "DblClick": "prevScene",
+    "Hold": "mainScene"
+  },
+  "properties": {
+    "scenes": [
+      "Screensharing",
+      "Face New",
+      "Side New"
+    ],
+    "mainScene": "Top New"
+  }
 }
