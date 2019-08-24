@@ -28,15 +28,20 @@ async function main() {
   }
 }
 
-async function changeMainScene() {
+async function changeMainScene() {  
   return await obs.changeScene('Face New');
 }
 
 async function changePrevScene() {
-  return changeNextScene(-1);
+  return changeScene(-1);
 }
 
-async function changeNextScene(delta=1) {
+async function changeNextScene() {
+  return changeScene(1);
+}
+
+async function changeScene(delta) {
+  console.log('Changing to', delta > 0 ? 'next' : 'previous', 'scene', delta); 
   const currentScene = await obs.currentScene();
   if (!currentScene) {
     return;
@@ -44,14 +49,13 @@ async function changeNextScene(delta=1) {
   let idx = scenes.indexOf(currentScene.name);
   while (true) {
     let newIdx = idx + delta;
-    if (newIdx > idx < scenes.length - 1) {
+    if (newIdx > scenes.length - 1) {
       newIdx = 0;
     }
     if (newIdx < 0) {
       newIdx = scenes.length - 1;
     }
     const newScene = scenes[newIdx];
-    console.log('Changing to scene', newScene);
     try {
       await obs.changeScene(newScene);
       break;

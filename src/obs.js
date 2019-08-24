@@ -23,6 +23,7 @@ class Obs {
   }
 
   async changeScene(sceneName) {
+    console.log('Changing to scene', sceneName);
     return await this.send('SetCurrentScene', { 'scene-name': sceneName })
       .catch(err => console.error('Error changing to', sceneName, err));
   }
