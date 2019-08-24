@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('lodash');
 
 const Arduino = require('./arduino');
 const Obs = require('./obs');
@@ -22,22 +23,27 @@ class App {
 
   parseCommandMap() {
     const { actions } = this.config;
-    console.log('actions', actions);
     return Object.keys(actions).reduce((obj, a) => {
-      obj[a] = this[actions[a]].bind(this);
+      const def = actions[a];
+      const [actionFn, param] = _.isArray(def) ? def : [def, null];
+      obj[a] = () => this[actionFn].bind(this)(param);
       return obj;
     }, {});
   }
 
-  async mainScene() {
-    return await this.obs.changeScene(this.props.mainScene);
+  async changeTo(scene) {
+    return await this.obs.changeScene(scene);
   }
 
   async prevScene() {
-    return this.nextScene(-1);
+    return this.addScene(-1);
   }
 
-  async nextScene(delta=1) {
+  async nextScene() {
+    return this.addScene(1);
+  }
+
+  async addScene(delta) {
     const { scenes } = this.props;
     const currentScene = await this.obs.currentScene();
     if (!currentScene) {
@@ -46,14 +52,13 @@ class App {
     let idx = scenes.indexOf(currentScene.name);
     while (true) {
       let newIdx = idx + delta;
-      if (newIdx > idx < scenes.length - 1) {
+      if (newIdx > scenes.length - 1) {
         newIdx = 0;
       }
       if (newIdx < 0) {
         newIdx = scenes.length - 1;
       }
       const newScene = scenes[newIdx];
-      console.log('Changing to scene', newScene);
       try {
         await this.obs.changeScene(newScene);
         break;

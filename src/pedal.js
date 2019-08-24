@@ -13,7 +13,7 @@ class Pedal {
     const cmd = _.get(this.commandMap, cmdStr);
     console.log('Executing', cmdStr);
     if (cmd) {
-      cmd(msg);
+      cmd();
     } else {
       console.warn('Command not found:', msg);
     }

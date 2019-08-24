@@ -1,14 +1,13 @@
 {
   "actions": {
     "Click": "nextScene",
-    "DblClick": "prevScene",
-    "Hold": "mainScene"
+    "DblClick": ["changeTo", "Face New"],
+    "Hold": ["changeTo", "Top New"]
   },
   "properties": {
     "scenes": [
-      "Screensharing",
-      "Face New",
-      "Side New"
+      "Top New",
+      "Side View"
     ],
     "mainScene": "Top New"
   }
