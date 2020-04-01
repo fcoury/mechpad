@@ -3,12 +3,13 @@ const _ = require('lodash');
 
 const Arduino = require('./arduino');
 const Obs = require('./obs');
+const Streamlabs = require('./streamlabs');
 const Pedal = require('./pedal');
 
 class App {
   async start() {
     this.readConfig();
-    this.obs = new Obs();
+    this.client = this.config.client === 'streamlabs' ? new Streamlabs(this.config.streamlabs) : new Obs();
     this.arduino = new Arduino();
     await this.arduino.init(this.config.port);
     this.pedal = new Pedal(this.parseCommandMap(), this.arduino)
@@ -32,7 +33,7 @@ class App {
   }
 
   async changeTo(scene) {
-    return await this.obs.changeScene(scene);
+    return await this.client.changeScene(scene);
   }
 
   async prevScene() {
@@ -45,7 +46,7 @@ class App {
 
   async addScene(delta) {
     const { scenes } = this.props;
-    const currentScene = await this.obs.currentScene();
+    const currentScene = await this.client.currentScene();
     if (!currentScene) {
       return;
     }
@@ -60,7 +61,7 @@ class App {
       }
       const newScene = scenes[newIdx];
       try {
-        await this.obs.changeScene(newScene);
+        await this.client.changeScene(newScene);
         break;
       } catch (err) {
         console.error('Error changing to scene', newScene, '. Error was:', err);
