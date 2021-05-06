@@ -2,17 +2,23 @@ const SockJS = require('sockjs-client');
 
 class Obs {
   constructor(config) {
+    this.config = config;
     this.nextRequestId = 1;
     this.requests = {};
     this.url = `http://127.0.0.1:${config.port}/api`;
     this.socket = new SockJS(this.url);
-    this.socket.onopen = () => {
+    this.socket.onopen = async () => {
       console.log('Streamlabs connection open');
+      await this.auth();
       this.onConnectionHandler();
     };
     this.socket.onmessage = (e) => {
       this.onMessageHandler(e.data);
     };
+  }
+
+  async auth() {
+    await this.request('TcpServerService', 'auth', this.config.token);
   }
 
   onConnectionHandler() {
